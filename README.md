@@ -60,7 +60,7 @@ Generate an application key:php artisan key:generate
 
 Update .env with:APP_NAME="Laravel Church SaaS"
 APP_ENV=local
-APP_KEY=base64:GX8m7GG+3Y+IunDfTXH5NIFkjZtSrM2jZqhNumNu+ak=
+APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
