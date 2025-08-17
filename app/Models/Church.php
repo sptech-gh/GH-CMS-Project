@@ -13,33 +13,54 @@ class Church extends Model
     protected $fillable = [
         'name',
         'slug',
-        'address',
-        'phone',
-        'email',
-        'website',
+        'location',
         'description',
-        'founded_year',
     ];
 
     /**
-     * Auto-generate a unique slug on create.
+     * Automatically generate/update slug when creating or updating.
      */
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($church) {
-            if (empty($church->slug)) {
-                $baseSlug = Str::slug($church->name);
-                $slug = $baseSlug;
-                $i = 1;
+            $church->slug = static::generateUniqueSlug($church->name);
+        });
 
-                while (static::where('slug', $slug)->exists()) {
-                    $slug = $baseSlug . '-' . $i++;
-                }
-
-                $church->slug = $slug;
+        static::updating(function ($church) {
+            // Only regenerate slug if name has changed
+            if ($church->isDirty('name')) {
+                $church->slug = static::generateUniqueSlug($church->name, $church->id);
             }
         });
+    }
+
+    /**
+     * Generate a unique slug for church names.
+     */
+    private static function generateUniqueSlug($name, $ignoreId = null)
+    {
+        $slug = Str::slug($name);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (
+            static::where('slug', $slug)
+                ->when($ignoreId, fn($query) => $query->where('id', '!=', $ignoreId))
+                ->exists()
+        ) {
+            $slug = $originalSlug . '-' . $counter++;
+        }
+
+        return $slug;
+    }
+
+    /**
+     * Use slug instead of ID in route model binding.
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

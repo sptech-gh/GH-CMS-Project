@@ -1,19 +1,22 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Churches</h1>
-    <a href="{{ route('churches.create') }}" class="bg-green-500 text-white px-4 py-2 rounded">Add New Church</a>
+<div class="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-xl font-bold mb-4">Churches</h2>
+
+    <a href="{{ route('churches.create') }}" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700 mb-4 inline-block">+ Register Church</a>
 
     @if(session('success'))
-        <div class="bg-green-100 text-green-700 p-2 mt-4">{{ session('success') }}</div>
+        <div class="bg-green-100 text-green-800 p-3 rounded mb-4">
+            {{ session('success') }}
+        </div>
     @endif
 
-    <table class="table-auto w-full mt-4 border-collapse border border-gray-300">
-        <thead>
+    <table class="w-full border-collapse border border-gray-200">
+        <thead class="bg-gray-100">
             <tr>
-                <th class="border p-2">Name</th>
-                <th class="border p-2">Slug</th>
+                <th class="border p-2 text-left">Name</th>
+                <th class="border p-2 text-left">Location</th>
                 <th class="border p-2">Actions</th>
             </tr>
         </thead>
@@ -21,22 +24,26 @@
             @forelse($churches as $church)
                 <tr>
                     <td class="border p-2">{{ $church->name }}</td>
-                    <td class="border p-2">{{ $church->slug }}</td>
-                    <td class="border p-2">
-                        <a href="{{ route('churches.show', $church) }}" class="text-blue-500">View</a> |
-                        <a href="{{ route('churches.edit', $church) }}" class="text-yellow-500">Edit</a> |
-                        <form action="{{ route('churches.destroy', $church) }}" method="POST" style="display:inline">
+                    <td class="border p-2">{{ $church->location }}</td>
+                    <td class="border p-2 flex space-x-2">
+                        <a href="{{ route('churches.show', $church->slug) }}" class="text-blue-600 hover:underline">View</a>
+                        <a href="{{ route('churches.edit', $church->slug) }}" class="text-yellow-600 hover:underline">Edit</a>
+                        <form action="{{ route('churches.destroy', $church->slug) }}" method="POST" onsubmit="return confirm('Are you sure?');">
                             @csrf @method('DELETE')
-                            <button type="submit" onclick="return confirm('Delete this church?')" class="text-red-500">Delete</button>
+                            <button type="submit" class="text-red-600 hover:underline">Delete</button>
                         </form>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="3" class="border p-2 text-center">No churches found.</td>
+                    <td colspan="3" class="text-center p-4">No churches found.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
+
+    <div class="mt-4">
+        {{ $churches->links() }}
+    </div>
 </div>
 @endsection

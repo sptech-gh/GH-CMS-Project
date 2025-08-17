@@ -1,23 +1,17 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChurchController;
+use App\Http\Controllers\ProfileController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 Route::get('/', fn() => redirect()->route('churches.index'));
+
+// Resource route for churches (slug will be used automatically)
 Route::resource('churches', ChurchController::class);
-Route::get('/churches/{slug}', [ChurchController::class, 'show'])->name('church.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::resource('churches', ChurchController::class)
-     ->middleware('auth');
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

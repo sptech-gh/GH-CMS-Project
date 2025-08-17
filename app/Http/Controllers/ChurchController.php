@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Church;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ChurchController extends Controller
 {
     /**
-     * Display a listing of churches.
+     * Display a listing of the resource.
      */
     public function index()
     {
-        $churches = Church::all();
+        $churches = Church::latest()->paginate(10);
         return view('churches.index', compact('churches'));
     }
 
     /**
-     * Show the form for creating a new church.
+     * Show the form for creating a new resource.
      */
     public function create()
     {
@@ -25,28 +26,24 @@ class ChurchController extends Controller
     }
 
     /**
-     * Store a newly created church in storage.
+     * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:churches',
-            'address' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:50',
-            'email' => 'nullable|email|max:255',
-            'website' => 'nullable|url|max:255',
-            'description' => 'nullable|string',
-            'founded_year' => 'nullable|integer|min:1800|max:' . date('Y'),
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:churches,name',
+            'location' => 'required|string|max:255',
         ]);
 
-        Church::create($request->all());
+        $validated['slug'] = Str::slug($validated['name']);
+
+        Church::create($validated);
 
         return redirect()->route('churches.index')->with('success', 'Church created successfully.');
     }
 
     /**
-     * Display the specified church.
+     * Display the specified resource.
      */
     public function show(Church $church)
     {
@@ -54,7 +51,7 @@ class ChurchController extends Controller
     }
 
     /**
-     * Show the form for editing the specified church.
+     * Show the form for editing the specified resource.
      */
     public function edit(Church $church)
     {
@@ -62,32 +59,29 @@ class ChurchController extends Controller
     }
 
     /**
-     * Update the specified church in storage.
+     * Update the specified resource in storage.
      */
     public function update(Request $request, Church $church)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:churches,slug,' . $church->id,
-            'address' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:50',
-            'email' => 'nullable|email|max:255',
-            'website' => 'nullable|url|max:255',
-            'description' => 'nullable|string',
-            'founded_year' => 'nullable|integer|min:1800|max:' . date('Y'),
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:churches,name,' . $church->id,
+            'location' => 'required|string|max:255',
         ]);
 
-        $church->update($request->all());
+        $validated['slug'] = Str::slug($validated['name']);
+
+        $church->update($validated);
 
         return redirect()->route('churches.index')->with('success', 'Church updated successfully.');
     }
 
     /**
-     * Remove the specified church from storage.
+     * Remove the specified resource from storage.
      */
     public function destroy(Church $church)
     {
         $church->delete();
+
         return redirect()->route('churches.index')->with('success', 'Church deleted successfully.');
     }
 }

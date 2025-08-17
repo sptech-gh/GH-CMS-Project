@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
 
             // Foreign key to churches table
-            $table->foreignId('church_id')
-                ->constrained('churches')
-                ->onDelete('cascade'); // Deletes users when church is deleted
+            $table->foreignId('church_id')->nullable()->constrained()->onDelete('cascade');
+ // Deletes users when church is deleted
 
             $table->string('name');
             $table->string('email')->unique();
