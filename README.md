@@ -1,7 +1,7 @@
-Laravel Church SaaS
-Welcome to the Laravel Church SaaS, a production-ready Laravel 11.x-based multi-tenant SaaS application designed to manage church operations with a focus on the Ghanaian market. This complete project follows Domain-Driven Design (DDD) principles and provides a scalable solution for church administration, including member management, donation tracking, attendance, events, follow-ups, analytics, payment integrations, billing, notifications, and role-based permissions.
+Anidaso Church App-SaaS
+Welcome to the Anidaso Church App-SaaS, a production-ready Laravel 11.x-based multi-tenant SaaS application designed to manage church operations with a focus on the Ghanaian market. This complete project follows Domain-Driven Design (DDD) principles and provides a scalable solution for church administration, including member management, donation tracking, attendance, events, follow-ups, analytics, payment integrations, billing, notifications, and role-based permissions.
 Overview
-The Laravel Church SaaS is a fully featured, production-ready platform for churches in Ghana to efficiently manage their operations. It supports multi-tenancy using stancl/tenancy, allowing multiple churches to operate independently on the same system. The application is tailored for the Ghanaian market with GHS currency, MoMo phone format (233XXXXXXXXX), and Ghana-themed UI colors. It includes a backend with DDD organization, Blade frontend with TailwindCSS and AlpineJS, a Filament admin panel, REST APIs with Sanctum, and integrations for Paystack and Flutterwave (for MTN/Airtel/Vodafone MoMo).
+The Anidaso Church App-SaaS is a fully featured, production-ready platform for churches in Ghana to efficiently manage their operations. It supports multi-tenancy using stancl/tenancy, allowing multiple churches to operate independently on the same system. The application is tailored for the Ghanaian market with GHS currency, MoMo phone format (233XXXXXXXXX), and Ghana-themed UI colors. It includes a backend with DDD organization, Blade frontend with TailwindCSS and AlpineJS, a Filament admin panel, REST APIs with Sanctum, and integrations for Paystack and Flutterwave (for MTN/Airtel/Vodafone MoMo).
 Key highlights:
 
 Multi-Tenant Support: Super Admins manage tenants, while Tenant Admins handle church-specific operations.
@@ -58,9 +58,9 @@ Copy .env.example to .env:copy .env.example .env
 
 Generate an application key:php artisan key:generate
 
-Update .env with:APP_NAME="Laravel Church SaaS"
+Update .env with:APP_NAME="Anidaso Church App-SaaS"
 APP_ENV=local
-APP_KEY=base64:GX8m7GG+3Y+IunDfTXH5NIFkjZtSrM2jZqhNumNu+ak=
+APP_KEY=
 APP_DEBUG=true
 APP_URL=http://localhost:8000
 
@@ -140,7 +140,7 @@ Acknowledgements
 
 Built with Laravel 11.x and TailwindCSS.
 Inspired by Ghanaian church management needs.
-Guided by a 21-day learning schedule, currently on Day 8.
+
 
 Troubleshooting
 
