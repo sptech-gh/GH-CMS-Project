@@ -15,6 +15,9 @@ class Church extends Model
         'slug',
         'location',
         'description',
+        'region',
+        'pastor_name',
+        'founded_at',
     ];
 
     /**

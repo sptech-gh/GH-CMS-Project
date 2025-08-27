@@ -8,19 +8,20 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('churches', function (Blueprint $table) {
+        Schema::create('members', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('location')->nullable();
-            $table->string('region')->nullable(); // ✅ Added region support
-            $table->string('pastor_name')->nullable();
-    $table->date('founded_at')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->unsignedBigInteger('church_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('church_id')->references('id')->on('churches')->onDelete('set null');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('churches');
+        Schema::dropIfExists('members');
     }
 };

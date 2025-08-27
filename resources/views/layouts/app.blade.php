@@ -1,55 +1,36 @@
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Anidaso Church App') }}</title>
-    @vite('resources/css/app.css')
-</head>
-<body class="bg-gray-100 text-gray-900">
-    <div class="min-h-screen flex flex-col">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        {{-- Navigation --}}
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="font-sans antialiased">
+    <div class="min-h-screen bg-gray-100">
         @include('layouts.navigation')
 
-        {{-- Main Content --}}
-        <main class="flex-1 container mx-auto px-4 py-6">
-
-            {{-- ✅ Flash Messages --}}
-            @if(session('success'))
-                <div class="mb-4 p-3 rounded-lg bg-green-100 border border-green-300 text-green-800">
-                    {{ session('success') }}
+        <!-- Page Heading -->
+        @isset($header)
+            <header class="bg-white shadow">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    {{ $header }}
                 </div>
-            @endif
+            </header>
+        @endisset
 
-            @if(session('error'))
-                <div class="mb-4 p-3 rounded-lg bg-red-100 border border-red-300 text-red-800">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            @if($errors->any())
-                <div class="mb-4 p-3 rounded-lg bg-red-100 border border-red-300 text-red-800">
-                    Please correct the errors below.
-                </div>
-            @endif
-
-            {{-- Page Content --}}
+        <!-- Page Content -->
+        <main>
             @yield('content')
         </main>
-
     </div>
-
-    <!-- Footer -->
-    <footer class="bg-white border-t mt-10">
-        <div class="max-w-6xl mx-auto px-4 py-4 text-center text-sm text-gray-500">
-            &copy; {{ date('Y') }} {{ config('app.name', 'Anidaso Church CMS') }}. All rights reserved-SPtech.
-        </div>
-    </footer>
 </body>
 </html>
-
-
-
-

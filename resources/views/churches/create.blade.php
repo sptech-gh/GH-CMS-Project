@@ -1,25 +1,15 @@
-@extends('layouts.app')
+<x-app-layout>
+    <h1 class="text-2xl font-bold text-ghana-gradient mb-4">Add New Church</h1>
 
-@section('content')
-<div class="max-w-2xl mx-auto bg-white shadow-md rounded-lg p-6">
-    <h2 class="text-xl font-bold mb-4">Register a New Church</h2>
-
-    <form action="{{ route('churches.store') }}" method="POST">
+    <form method="POST" action="{{ route('churches.store') }}" class="space-y-4">
         @csrf
+        <input type="text" name="name" placeholder="Church Name" class="w-full p-2 border rounded">
+        <input type="text" name="location" placeholder="Location" class="w-full p-2 border rounded">
+        <input type="text" name="pastor_name" placeholder="Pastor Name" class="w-full p-2 border rounded">
+        <input type="date" name="founded_at" class="w-full p-2 border rounded">
 
-        <div class="mb-4">
-            <label for="name" class="block text-gray-700 font-medium mb-2">Church Name</label>
-            <input type="text" name="name" id="name" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500" value="{{ old('name') }}" required>
-            @error('name') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-
-        <div class="mb-4">
-            <label for="location" class="block text-gray-700 font-medium mb-2">Location</label>
-            <input type="text" name="location" id="location" class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500" value="{{ old('location') }}" required>
-            @error('location') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
-        </div>
-
-        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg shadow hover:bg-green-700">Register</button>
+        <button type="submit" class="px-4 py-2 bg-ghana-gradient text-white rounded">
+            Save
+        </button>
     </form>
-</div>
-@endsection
+</x-app-layout>

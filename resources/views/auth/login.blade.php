@@ -1,45 +1,53 @@
-@extends('layouts.app')
+<x-guest-layout>
+    <div class="max-w-md mx-auto mt-10 bg-white shadow-xl rounded-2xl p-8">
+        <!-- Heading -->
+        <h2 class="text-2xl font-bold text-center mb-6 text-ghana-gradient">Login</h2>
 
-@section('content')
-<div class="max-w-md mx-auto">
-    <div class="card">
-        <h2 class="card-header text-green-600">🔑 Login</h2>
+        <!-- Session Status -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
 
-        <form method="POST" action="{{ route('login') }}" class="space-y-4">
+        <!-- Form -->
+        <form method="POST" action="{{ route('login') }}">
             @csrf
 
+            <!-- Email -->
             <div>
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus class="input">
+                <x-input-label for="email" :value="__('Email')" />
+                <x-text-input id="email" class="block mt-1 w-full rounded-xl border-gray-300"
+                                type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Password</label>
-                <input id="password" type="password" name="password" required class="input">
+            <!-- Password -->
+            <div class="mt-4">
+                <x-input-label for="password" :value="__('Password')" />
+                <x-text-input id="password" class="block mt-1 w-full rounded-xl border-gray-300"
+                                type="password"
+                                name="password"
+                                required autocomplete="current-password" />
+                <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
 
-            <div class="flex items-center justify-between">
-                <label class="flex items-center">
-                    <input type="checkbox" name="remember" class="rounded border-gray-300 text-green-600 shadow-sm focus:ring-green-500">
-                    <span class="ml-2 text-sm text-gray-600">Remember me</span>
+            <!-- Remember Me -->
+            <div class="block mt-4">
+                <label for="remember_me" class="inline-flex items-center">
+                    <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-ghana-gradient shadow-sm focus:ring-ghana-gradient" name="remember">
+                    <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
                 </label>
+            </div>
 
+            <!-- Buttons -->
+            <div class="flex items-center justify-between mt-6">
                 @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="text-yellow-600 hover:underline text-sm">
-                        Forgot password?
+                    <a class="underline text-sm text-gray-600 hover:text-ghana-gradient" href="{{ route('password.request') }}">
+                        {{ __('Forgot your password?') }}
                     </a>
                 @endif
+
+                <x-primary-button class="ml-3 bg-ghana-gradient text-white px-4 py-2 rounded-xl shadow hover:opacity-90">
+                    {{ __('Log in') }}
+                </x-primary-button>
             </div>
-
-            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-md font-semibold transition">
-                ✅ Login
-            </button>
         </form>
-
-        <p class="mt-4 text-sm text-gray-600 text-center">
-            Don’t have an account?
-            <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Register here</a>
-        </p>
     </div>
-</div>
-@endsection
+</x-guest-layout>

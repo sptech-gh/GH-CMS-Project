@@ -10,6 +10,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Create example churches
-        $this->call(\Database\Seeders\ChurchSeeder::class);
+       $this->call([
+        ChurchSeeder::class,
+        MemberSeeder::class,
+    ]);
     }
 }

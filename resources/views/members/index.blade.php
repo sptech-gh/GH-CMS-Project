@@ -3,35 +3,35 @@
 @section('content')
     <!-- Header -->
     <div class="bg-ghana-gradient text-white shadow rounded-2xl p-6 mb-8">
-        <h1 class="text-3xl font-bold">Churches</h1>
+        <h1 class="text-3xl font-bold">Members</h1>
         <p class="mt-2 text-sm opacity-90">
-            Manage all registered churches in your system.
+            Manage church members and their details.
         </p>
     </div>
 
-    <!-- Churches Table -->
+    <!-- Members Table -->
     <div class="bg-white shadow rounded-2xl p-6">
         <table class="w-full border-collapse">
             <thead class="bg-gray-100 text-gray-700">
                 <tr>
                     <th class="p-3 text-left">#</th>
-                    <th class="p-3 text-left">Church Name</th>
-                    <th class="p-3 text-left">Location</th>
-                    <th class="p-3 text-left">Pastor</th>
-                    <th class="p-3 text-left">Members</th>
+                    <th class="p-3 text-left">Name</th>
+                    <th class="p-3 text-left">Email</th>
+                    <th class="p-3 text-left">Phone</th>
+                    <th class="p-3 text-left">Church</th>
                     <th class="p-3 text-left">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($churches as $church)
+                @forelse($members as $member)
                     <tr class="border-b">
                         <td class="p-3">{{ $loop->iteration }}</td>
-                        <td class="p-3">{{ $church->name }}</td>
-                        <td class="p-3">{{ $church->location }}</td>
-                        <td class="p-3">{{ $church->pastor_name }}</td>
-                        <td class="p-3">{{ $church->members_count }}</td>
+                        <td class="p-3">{{ $member->name }}</td>
+                        <td class="p-3">{{ $member->email }}</td>
+                        <td class="p-3">{{ $member->phone }}</td>
+                        <td class="p-3">{{ $member->church->name ?? 'N/A' }}</td>
                         <td class="p-3">
-                            <a href="{{ route('churches.edit', $church) }}"
+                            <a href="{{ route('members.edit', $member) }}"
                                class="px-3 py-1 bg-ghana-gradient text-white rounded-lg shadow hover:opacity-90">
                                 Edit
                             </a>
@@ -40,7 +40,7 @@
                 @empty
                     <tr>
                         <td colspan="6" class="p-3 text-center text-gray-500">
-                            No churches found.
+                            No members found.
                         </td>
                     </tr>
                 @endforelse
