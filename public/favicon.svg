@@ -1,0 +1,17 @@
+<!-- /public/favicon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 40 40" role="img" aria-label="Church CMS">
+  <defs>
+    <linearGradient id="ghanaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="50%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- base building -->
+  <path d="M20 4 L8 12 v16 h24 V12 L20 4z" fill="none" stroke="url(#ghanaGrad)" stroke-width="2.4" stroke-linejoin="round"/>
+  <!-- roof cross -->
+  <path d="M20 7 v6 M16.5 10 h7" stroke="url(#ghanaGrad)" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- door -->
+  <rect x="17.2" y="19" width="5.6" height="9.5" rx="1.2" fill="url(#ghanaGrad)"/>
+</svg>

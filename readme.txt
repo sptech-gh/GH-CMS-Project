@@ -73,3 +73,16 @@ See Roadmap.md for development milestones and planned features.
 
 
 
+//extra member registration details
+1. Ghana card/Passport/
+2. Residence
+3. Emergency contact and name
+4. Occupation
+5. Level of education
+6. Marital status
+7. Spouse
+8. Children names of each and age
+9. Member ID
+10. Picture
+
+//region and description data not storing when creating churches 

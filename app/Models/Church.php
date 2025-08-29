@@ -14,21 +14,23 @@ class Church extends Model
         'name',
         'slug',
         'location',
-        'description',
         'region',
         'pastor_name',
         'founded_at',
+        'description',
     ];
 
     /**
-     * Automatically generate/update slug when creating or updating.
+     * Boot model events for slug handling.
      */
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($church) {
-            $church->slug = static::generateUniqueSlug($church->name);
+            if (empty($church->slug)) {
+                $church->slug = static::generateUniqueSlug($church->name);
+            }
         });
 
         static::updating(function ($church) {
@@ -42,7 +44,7 @@ class Church extends Model
     /**
      * Generate a unique slug for church names.
      */
-    private static function generateUniqueSlug($name, $ignoreId = null)
+    private static function generateUniqueSlug(string $name, $ignoreId = null): string
     {
         $slug = Str::slug($name);
         $originalSlug = $slug;
@@ -53,7 +55,8 @@ class Church extends Model
                 ->when($ignoreId, fn($query) => $query->where('id', '!=', $ignoreId))
                 ->exists()
         ) {
-            $slug = $originalSlug . '-' . $counter++;
+            $slug = "{$originalSlug}-{$counter}";
+            $counter++;
         }
 
         return $slug;
@@ -62,8 +65,16 @@ class Church extends Model
     /**
      * Use slug instead of ID in route model binding.
      */
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    /**
+     * Relationships
+     */
+    public function members()
+    {
+        return $this->hasMany(Member::class);
     }
 }

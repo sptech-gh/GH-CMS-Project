@@ -21,10 +21,11 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // ✅ Churches resource routes
-    Route::resource('churches', ChurchController::class);
+    // ✅ Churches resource routes (use slug instead of id)
+    Route::resource('churches', ChurchController::class)
+        ->parameters(['churches' => 'church:slug']);
 
-    // ✅ Members resource routes
+    // ✅ Members resource routes (still uses id unless you switch to slugs)
     Route::resource('members', MemberController::class);
 
     // ✅ Profile routes

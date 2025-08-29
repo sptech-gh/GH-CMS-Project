@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
     <!-- Header -->
     <div class="bg-ghana-gradient text-white shadow rounded-2xl p-6 mb-8">
         <h1 class="text-3xl font-bold">Welcome, {{ Auth::user()->name }} 👋</h1>
@@ -34,14 +32,14 @@
     <div class="mt-10">
         <h2 class="text-xl font-bold mb-4 text-ghana-gradient">Quick Actions</h2>
         <div class="flex flex-wrap gap-4">
-            <a href="{{ url('/churches') }}"
+            <a href="{{ route('churches.index') }}"
                class="px-6 py-3 bg-ghana-gradient text-white rounded-xl shadow hover:opacity-90">
                 Manage Churches
             </a>
-            <a href="{{ url('/members') }}"
+            <a href="{{ route('members.index') }}"
                class="px-6 py-3 bg-ghana-gradient text-white rounded-xl shadow hover:opacity-90">
                 Manage Members
             </a>
         </div>
     </div>
-@endsection
+</x-app-layout>

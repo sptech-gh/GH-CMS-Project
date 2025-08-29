@@ -24,8 +24,9 @@ class MemberController extends Controller
      */
     public function create()
     {
-        // Get churches for dropdown
-        $churches = Church::all();
+        // Get churches for dropdown (each member must belong to a church)
+        $churches = Church::orderBy('name')->get();
+
         return view('members.create', compact('churches'));
     }
 
@@ -44,11 +45,11 @@ class MemberController extends Controller
             'church_id'     => 'required|exists:churches,id',
         ]);
 
-        // Save member
+        // Create member
         Member::create($validated);
 
         return redirect()->route('members.index')
-                         ->with('success', 'Member created successfully.');
+                         ->with('success', '✅ Member created successfully.');
     }
 
     /**
@@ -56,7 +57,9 @@ class MemberController extends Controller
      */
     public function show(Member $member)
     {
-        // Show single member profile
+        // Load church relation in case it's needed in the view
+        $member->load('church');
+
         return view('members.show', compact('member'));
     }
 
@@ -65,7 +68,8 @@ class MemberController extends Controller
      */
     public function edit(Member $member)
     {
-        $churches = Church::all();
+        $churches = Church::orderBy('name')->get();
+
         return view('members.edit', compact('member', 'churches'));
     }
 
@@ -86,7 +90,7 @@ class MemberController extends Controller
         $member->update($validated);
 
         return redirect()->route('members.show', $member)
-                         ->with('success', 'Member updated successfully.');
+                         ->with('success', '✅ Member updated successfully.');
     }
 
     /**
@@ -97,6 +101,6 @@ class MemberController extends Controller
         $member->delete();
 
         return redirect()->route('members.index')
-                         ->with('success', 'Member deleted successfully.');
+                         ->with('success', '🗑️ Member deleted successfully.');
     }
 }

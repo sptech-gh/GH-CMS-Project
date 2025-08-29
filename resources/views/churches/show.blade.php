@@ -1,36 +1,29 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800">
+            {{ $church->name }}
+        </h2>
+    </x-slot>
 
-@section('content')
-<div class="bg-white shadow-xl rounded-xl p-8 max-w-2xl mx-auto">
-    <div class="text-center mb-6">
-        <h2 class="text-3xl font-bold text-ghana-gradient">{{ $church->name }}</h2>
-        <p class="text-gray-500">Church Profile</p>
-    </div>
+    <div class="py-6 max-w-4xl mx-auto">
+        <div class="bg-white shadow rounded-lg p-6">
+            <p><strong>Location:</strong> {{ $church->location }}</p>
+            <p><strong>Region:</strong> {{ $church->region }}</p>
+            <p><strong>Pastor:</strong> {{ $church->pastor_name }}</p>
+            <p><strong>Year Founded:</strong> {{ $church->founded_at ? \Carbon\Carbon::parse($church->founded_at)->format('M d, Y') : 'N/A' }}</p>
+            <p class="mt-4"><strong>Description:</strong></p>
+            <p>{{ $church->description }}</p>
 
-    <div class="space-y-4">
-        <div class="flex justify-between border-b pb-2">
-            <span class="font-semibold">Location:</span>
-            <span>{{ $church->location }}</span>
-        </div>
-        <div class="flex justify-between border-b pb-2">
-            <span class="font-semibold">Pastor:</span>
-            <span>{{ $church->pastor }}</span>
-        </div>
-        <div class="flex justify-between border-b pb-2">
-            <span class="font-semibold">Created At:</span>
-            <span>{{ $church->created_at->format('d M Y') }}</span>
-        </div>
-        <div class="flex justify-between">
-            <span class="font-semibold">Updated At:</span>
-            <span>{{ $church->updated_at->format('d M Y') }}</span>
+            <div class="mt-6 flex justify-end">
+                <a href="{{ route('churches.edit', $church->slug) }}"
+                   class="px-4 py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500 mr-2">
+                    Edit
+                </a>
+                <a href="{{ route('churches.index') }}"
+                   class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">
+                    Back
+                </a>
+            </div>
         </div>
     </div>
-
-    <div class="mt-6 flex justify-end space-x-3">
-        <a href="{{ route('churches.index') }}"
-           class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition">Back</a>
-        <a href="{{ route('churches.edit', $church) }}"
-           class="px-4 py-2 bg-ghana-gradient text-white rounded-lg shadow hover:opacity-90 transition">Edit</a>
-    </div>
-</div>
-@endsection
+</x-app-layout>

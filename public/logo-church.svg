@@ -1,0 +1,30 @@
+<!-- /public/logo-church.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="48" viewBox="0 0 220 48" role="img" aria-label="Church CMS">
+  <defs>
+    <linearGradient id="ghanaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#dc2626"/>   <!-- red-600 -->
+      <stop offset="50%" stop-color="#f59e0b"/>  <!-- amber-500 -->
+      <stop offset="100%" stop-color="#16a34a"/> <!-- green-600 -->
+    </linearGradient>
+  </defs>
+
+  <!-- Icon -->
+  <g transform="translate(4,4)">
+    <!-- base building -->
+    <path d="M20 0 L6 10 v22 h28 V10 L20 0z" fill="none" stroke="url(#ghanaGrad)" stroke-width="2" stroke-linejoin="round"/>
+    <!-- roof cross -->
+    <path d="M20 4 v8 M16 8 h8" stroke="url(#ghanaGrad)" stroke-width="2" stroke-linecap="round"/>
+    <!-- door -->
+    <rect x="17" y="20" width="6" height="12" rx="1.5" fill="url(#ghanaGrad)"/>
+    <!-- windows -->
+    <rect x="9"  y="16" width="4" height="4"  rx="0.8" stroke="url(#ghanaGrad)" stroke-width="1.5" fill="none"/>
+    <rect x="27" y="16" width="4" height="4"  rx="0.8" stroke="url(#ghanaGrad)" stroke-width="1.5" fill="none"/>
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(56,30)">
+    <text x="0" y="0" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial" font-size="20" font-weight="700" fill="#111827">
+      Church <tspan font-weight="600" fill="url(#ghanaGrad)">CMS</tspan>
+    </text>
+  </g>
+</svg>

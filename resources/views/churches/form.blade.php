@@ -1,43 +1,45 @@
-@csrf
-
-<div class="mb-4">
-    <label class="block font-bold">Name</label>
-    <input type="text" name="name" value="{{ old('name', $church->name ?? '') }}" class="border p-2 w-full" required>
+<!-- Church Name -->
+<div>
+    <input type="text"
+           name="name"
+           placeholder="Church Name"
+           value="{{ old('name', $church->name ?? '') }}"
+           class="w-full p-2 border rounded @error('name') border-red-500 @enderror">
+    @error('name')
+        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+    @enderror
 </div>
 
-<div class="mb-4">
-    <label class="block font-bold">Slug</label>
-    <input type="text" name="slug" value="{{ old('slug', $church->slug ?? '') }}" class="border p-2 w-full" required>
+<!-- Location -->
+<div>
+    <input type="text"
+           name="location"
+           placeholder="Location"
+           value="{{ old('location', $church->location ?? '') }}"
+           class="w-full p-2 border rounded">
 </div>
 
-<div class="mb-4">
-    <label class="block font-bold">Address</label>
-    <input type="text" name="address" value="{{ old('address', $church->address ?? '') }}" class="border p-2 w-full">
+<!-- Pastor Name -->
+<div>
+    <input type="text"
+           name="pastor_name"
+           placeholder="Pastor Name"
+           value="{{ old('pastor_name', $church->pastor_name ?? '') }}"
+           class="w-full p-2 border rounded">
 </div>
 
-<div class="mb-4">
-    <label class="block font-bold">Phone</label>
-    <input type="text" name="phone" value="{{ old('phone', $church->phone ?? '') }}" class="border p-2 w-full">
+<!-- Founded At -->
+<div>
+    <input type="date"
+           name="founded_at"
+           value="{{ old('founded_at', $church->founded_at ?? '') }}"
+           class="w-full p-2 border rounded">
 </div>
 
-<div class="mb-4">
-    <label class="block font-bold">Email</label>
-    <input type="email" name="email" value="{{ old('email', $church->email ?? '') }}" class="border p-2 w-full">
+<!-- Description -->
+<div>
+    <textarea name="description"
+              placeholder="Brief description of the church"
+              rows="4"
+              class="w-full p-2 border rounded">{{ old('description', $church->description ?? '') }}</textarea>
 </div>
-
-<div class="mb-4">
-    <label class="block font-bold">Website</label>
-    <input type="url" name="website" value="{{ old('website', $church->website ?? '') }}" class="border p-2 w-full">
-</div>
-
-<div class="mb-4">
-    <label class="block font-bold">Description</label>
-    <textarea name="description" class="border p-2 w-full">{{ old('description', $church->description ?? '') }}</textarea>
-</div>
-
-<div class="mb-4">
-    <label class="block font-bold">Founded Year</label>
-    <input type="number" name="founded_year" value="{{ old('founded_year', $church->founded_year ?? '') }}" class="border p-2 w-full">
-</div>
-
-<button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
