@@ -2,53 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Church;
-use App\Models\Donation;
-use App\Models\Event;
-use App\Models\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+// Import models used for counts
+use App\Models\Donation;
+use App\Models\Member;
+use App\Models\Event;
+use App\Models\Church;
 
 class DashboardController extends Controller
 {
-    /**
-     * Show the dashboard (global or church-specific).
-     */
-    public function index(Request $request, Church $church = null)
+    public function index(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
-        // If a specific church is in the route
-        if ($request->route('church')) {
-            $church = Church::findOrFail($request->route('church'));
+        // counts (guard if models/table missing)
+        $donationsCount = 0;
+        $membersCount = 0;
+        $eventsCount = 0;
+        $recentDonations = collect();
 
-            // Church-specific stats
-            $churchCount   = 1; // only this church
-            $memberCount   = $church->members()->count();
-            $donationSum   = $church->donations()->sum('amount');
+        if (class_exists(Donation::class)) {
+            $donationsCount = Donation::count();
+            $recentDonations = Donation::orderBy('created_at', 'desc')->limit(6)->get();
+        }
 
-            // Recent donations
-            $recentDonations = $church->donations()->latest()->take(5)->get();
+        if (class_exists(Member::class)) {
+            $membersCount = Member::count();
+        }
 
-            $userChurches = [$church]; // only this church
+        if (class_exists(Event::class)) {
+            $eventsCount = Event::count();
+        }
+
+        // fetch churches for the logged-in user (adjust relation name if different)
+        $churches = collect();
+        if (method_exists($user, 'churches')) {
+            $churches = $user->churches()->latest()->get();
         } else {
-            // 🔹 Global stats
-            $churchCount   = Church::count();
-            $memberCount   = Member::count();
-            $donationSum   = Donation::sum('amount');
+            // fallback: all churches if relation not set (remove if undesired)
+            if (class_exists(Church::class)) {
+                $churches = Church::latest()->limit(10)->get();
+            }
+        }
 
-            $recentDonations = Donation::latest()->take(5)->get();
-
-            // Churches associated with logged-in user
-            $userChurches = $user->churches()->get();
+        // optional: set $church context if you support selecting a specific church
+        $church = null;
+        if ($request->has('church')) {
+            $church = Church::find($request->query('church'));
         }
 
         return view('dashboard', compact(
-            'churchCount',
-            'memberCount',
-            'donationSum',
-            'userChurches',
+            'donationsCount',
+            'membersCount',
+            'eventsCount',
             'recentDonations',
-            'church'
+            'church',
+            'churches'
         ));
     }
 }

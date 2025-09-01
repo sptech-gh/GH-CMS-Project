@@ -24,7 +24,7 @@
 
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
                         <div class="w-8 h-8 rounded-lg bg-ghana-gradient"></div>
-                        <span class="text-lg font-extrabold bg-ghana-gradient bg-clip-text text-ghana-gradient tracking-tight">
+                        <span class="text-lg font-extrabold bg-ghana-gradient bg-clip-text text-transparent tracking-tight">
                             Anidaso CMS
                         </span>
                     </a>
@@ -32,7 +32,7 @@
 
                 {{-- Center: Context Title --}}
                 <div class="hidden sm:block">
-                    <h1 class="text-xl font-bold bg-ghana-gradient bg-clip-text text-ghana-gradient">
+                    <h1 class="text-xl font-bold bg-ghana-gradient bg-clip-text text-transparent">
                         @if($church)
                             {{ $church->name }} Dashboard
                         @else
@@ -68,21 +68,18 @@
                         role="menu"
                     >
                         <a href="{{ route('members.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50" role="menuitem">
-                            {{-- users icon --}}
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M16 11c1.657 0 3-1.79 3-4s-1.343-4-3-4-3 1.79-3 4 1.343 4 3 4zM8 11c1.657 0 3-1.79 3-4S9.657 3 8 3 5 4.79 5 7s1.343 4 3 4zM8 13c-2.761 0-8 1.387-8 4.148V20h10.09A6.507 6.507 0 018 17c0-.714.111-1.403.317-2.053C7.15 14.322 5.406 13 8 13zm8 0c-3.314 0-6 1.79-6 4v3h12v-3c0-2.21-2.686-4-6-4z"/>
                             </svg>
                             <span>Members</span>
                         </a>
                         <a href="{{ route('events.index') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50" role="menuitem">
-                            {{-- calendar icon --}}
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M7 2a1 1 0 011 1v1h8V3a1 1 0 112 0v1h1a2 2 0 012 2v3H2V6a2 2 0 012-2h1V3a1 1 0 112 0v1zM2 10h20v8a2 2 0 01-2 2H4a2 2 0 01-2-2v-8zm5 3a1 1 0 000 2h2a1 1 0 100-2H7z"/>
                             </svg>
                             <span>Events</span>
                         </a>
                         <a href="{{ route('donations.all') }}" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50" role="menuitem">
-                            {{-- money icon --}}
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M3 6h18v12H3zM5 8v8h14V8H5zm2 2h3v4H7v-4z"/>
                             </svg>
@@ -92,7 +89,6 @@
                         <form method="POST" action="{{ route('logout') }}" class="px-2">
                             @csrf
                             <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 text-ghRed">
-                                {{-- logout icon --}}
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M16 13v-2H7V8l-5 4 5 4v-3h9zM20 3h-8a2 2 0 00-2 2v4h2V5h8v14h-8v-4h-2v4a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2z"/>
                                 </svg>
@@ -112,9 +108,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 grid grid-cols-1 lg:grid-cols-[260px,1fr] gap-6">
 
         {{-- Sidebar (desktop) / Drawer (mobile) --}}
-        <aside
-            class="lg:sticky lg:top-20"
-        >
+        <aside class="lg:sticky lg:top-20">
             {{-- Desktop sidebar --}}
             <nav class="hidden lg:block bg-white rounded-2xl shadow border overflow-hidden">
                 <div class="bg-ghana-gradient h-2"></div>
@@ -122,7 +116,6 @@
                 <ul class="p-3 space-y-1">
                     <li>
                         <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gray-50">
-                            {{-- home icon --}}
                             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l10 9h-3v9H5v-9H2z"/></svg>
                             <span>Dashboard</span>
                         </a>
@@ -165,20 +158,9 @@
             </nav>
 
             {{-- Mobile drawer --}}
-            <div
-                class="lg:hidden fixed inset-0 z-40"
-                x-cloak
-                x-show="sidebarOpen"
-                x-transition.opacity
-                @keydown.escape.window="sidebarOpen = false"
-            >
+            <div class="lg:hidden fixed inset-0 z-40" x-cloak x-show="sidebarOpen" x-transition.opacity @keydown.escape.window="sidebarOpen = false">
                 <div @click="sidebarOpen = false" class="absolute inset-0 bg-black/40"></div>
-                <nav
-                    x-show="sidebarOpen"
-                    x-transition
-                    class="absolute left-0 top-0 h-full w-72 bg-white shadow-2xl border-r p-4"
-                    aria-label="Sidebar"
-                >
+                <nav x-show="sidebarOpen" x-transition class="absolute left-0 top-0 h-full w-72 bg-white shadow-2xl border-r p-4" aria-label="Sidebar">
                     <div class="flex items-center justify-between mb-4">
                         <span class="font-bold">Menu</span>
                         <button @click="sidebarOpen = false" class="w-9 h-9 inline-flex items-center justify-center rounded-lg hover:bg-gray-100">
@@ -209,7 +191,7 @@
         <main>
             {{-- Stats --}}
             <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                <div class="bg-white rounded-2xl shadow p-5 border-t-4 border-ghana-gradient">
+                <div class="bg-white rounded-2xl shadow p-5 border-t-4 border-ghGold">
                     <div class="flex items-center justify-between">
                         <h3 class="font-semibold">Donations</h3>
                         <svg class="w-5 h-5 text-ghGold" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 4-9 4-9-4 9-4zm9 7l-9 4-9-4v7l9 4 9-4v-7z"/></svg>
@@ -217,7 +199,7 @@
                     <p class="mt-2 text-3xl font-extrabold text-ghGold">{{ $donationsCount }}</p>
                 </div>
 
-                <div class="bg-white rounded-2xl shadow p-5 border-t-4 border-ghana-gradient">
+                <div class="bg-white rounded-2xl shadow p-5 border-t-4 border-ghGreen">
                     <div class="flex items-center justify-between">
                         <h3 class="font-semibold">Members</h3>
                         <svg class="w-5 h-5 text-ghGreen" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zm-7 9a7 7 0 0114 0v1H5v-1z"/></svg>
@@ -225,7 +207,7 @@
                     <p class="mt-2 text-3xl font-extrabold text-ghGreen">{{ $membersCount }}</p>
                 </div>
 
-                <div class="bg-white rounded-2xl shadow p-5 border-t-4 border-ghana-gradient">
+                <div class="bg-white rounded-2xl shadow p-5 border-t-4 border-ghRed">
                     <div class="flex items-center justify-between">
                         <h3 class="font-semibold">Events</h3>
                         <svg class="w-5 h-5 text-ghRed" viewBox="0 0 24 24" fill="currentColor"><path d="M7 2h2v2h6V2h2v2h3v18H4V4h3V2zm13 8H6v10h14V10z"/></svg>
@@ -234,8 +216,8 @@
                 </div>
             </section>
 
-            {{-- Churches list (for logged-in user) --}}
-            <section class="bg-white rounded-2xl shadow p-6 border-t-4 border-ghana-gradient mb-6">
+            {{-- Churches list --}}
+            <section class="bg-white rounded-2xl shadow p-6 border-t-4 border-ghGold mb-6">
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-semibold">Your Churches</h2>
                     <a href="{{ route('members.index') }}" class="text-sm text-ghRed hover:text-ghGold">Manage Members</a>
@@ -268,7 +250,7 @@
             </section>
 
             {{-- Recent Donations --}}
-            <section class="bg-white rounded-2xl shadow p-6 border-t-4 border-ghana-gradient">
+            <section class="bg-white rounded-2xl shadow p-6 border-t-4 border-ghGold">
                 <h2 class="text-lg font-semibold mb-4">Recent Donations</h2>
 
                 @if($recentDonations->isEmpty())
