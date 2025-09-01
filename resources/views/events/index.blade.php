@@ -5,45 +5,43 @@
 
     <h1 class="text-2xl font-bold mb-6 bg-ghana-gradient bg-clip-text text-ghana-gradient">
         @if(isset($church))
-            {{ $church->name }} Members
+            {{ $church->name }} Events
         @else
-            All Members
+            All Events
         @endif
     </h1>
 
     <div class="mb-4">
-        <a href="{{ isset($church) ? route('churches.members.create', $church) : route('members.create') }}"
+        <a href="{{ isset($church) ? route('churches.events.create', $church) : route('events.create') }}"
            class="px-4 py-2 bg-ghana-gradient text-white rounded-lg shadow hover:opacity-90 transition">
-            Add New Member
+            Create New Event
         </a>
     </div>
 
     <div class="bg-white shadow-lg rounded-lg p-6 border-t-4 border-ghana-gradient">
-        @if($members->isEmpty())
-            <p class="text-gray-500">No members found.</p>
+        @if($events->isEmpty())
+            <p class="text-gray-500">No events found.</p>
         @else
             <table class="w-full border-collapse">
                 <thead>
                     <tr class="bg-ghana-gradient bg-opacity-20 text-ghBlack">
-                        <th class="p-3 border">Name</th>
-                        <th class="p-3 border">Email</th>
-                        <th class="p-3 border">Phone</th>
-                        <th class="p-3 border">Joined</th>
+                        <th class="p-3 border">Title</th>
+                        <th class="p-3 border">Description</th>
+                        <th class="p-3 border">Date</th>
                         <th class="p-3 border">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($members as $member)
+                    @foreach($events as $event)
                         <tr class="hover:bg-ghana-gradient hover:bg-opacity-10">
-                            <td class="p-3 border">{{ $member->name }}</td>
-                            <td class="p-3 border">{{ $member->email }}</td>
-                            <td class="p-3 border">{{ $member->phone ?? 'N/A' }}</td>
-                            <td class="p-3 border">{{ $member->created_at->format('M d, Y') }}</td>
+                            <td class="p-3 border">{{ $event->title }}</td>
+                            <td class="p-3 border">{{ Str::limit($event->description, 50) }}</td>
+                            <td class="p-3 border">{{ $event->date->format('M d, Y') }}</td>
                             <td class="p-3 border flex gap-2">
-                                <a href="{{ route('members.edit', $member) }}" class="px-3 py-1 bg-ghGold text-white rounded hover:opacity-90 transition">
+                                <a href="{{ route('events.edit', $event) }}" class="px-3 py-1 bg-ghGold text-white rounded hover:opacity-90 transition">
                                     Edit
                                 </a>
-                                <form action="{{ route('members.destroy', $member) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                <form action="{{ route('events.destroy', $event) }}" method="POST" onsubmit="return confirm('Are you sure?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="px-3 py-1 bg-ghRed text-white rounded hover:opacity-90 transition">

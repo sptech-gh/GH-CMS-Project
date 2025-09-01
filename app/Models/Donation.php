@@ -5,20 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Member extends Model
+class Donation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'church_id',
-        'name',
-        'email',
-        'phone',
-        'address',
-        'dob',
-        'gender',
-        'joined_at',
+        'member_id',
+        'amount',
+        'method',
+        'reference',
         'status',
+        'notes',
     ];
 
     /**
@@ -29,9 +27,11 @@ class Member extends Model
         return $this->belongsTo(Church::class);
     }
 
-    public function donations()
+    public function member()
     {
-        // One member can have many donations
-        return $this->hasMany(Donation::class);
+        // Nullable relationship — donor might be anonymous
+        return $this->belongsTo(Member::class)->withDefault([
+            'name' => 'Anonymous',
+        ]);
     }
 }

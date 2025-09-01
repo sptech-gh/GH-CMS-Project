@@ -1,38 +1,72 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ChurchController;
-use App\Http\Controllers\MemberController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MemberController;
+use App\Http\Controllers\DonationController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-*/
-
-// ✅ Landing page
+// --------------------
+// Landing Page / Home
+// --------------------
 Route::get('/', function () {
-    return view('welcome');
+    // Redirect authenticated users to dashboard
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+    return view('welcome'); // Blade view for landing page
 })->name('home');
 
-// ✅ Dashboard (requires auth)
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+// --------------------
+// Dashboard
+// --------------------
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('dashboard');
 
-    // ✅ Churches resource routes (use slug instead of id)
-    Route::resource('churches', ChurchController::class)
-        ->parameters(['churches' => 'church:slug']);
+// --------------------
+// Global Events (not tied to any church)
+// --------------------
+Route::resource('events', EventController::class)
+    ->middleware(['auth']); // protect routes if needed
 
-    // ✅ Members resource routes (still uses id unless you switch to slugs)
-    Route::resource('members', MemberController::class);
-
-    // ✅ Profile routes
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+// --------------------
+// Church-specific Events
+// --------------------
+Route::prefix('churches/{church}')->middleware(['auth'])->group(function () {
+    Route::resource('events', EventController::class)->names('churches.events');
 });
 
-// ✅ Auth routes (Laravel Breeze / Jetstream / Fortify)
+// --------------------
+// Members (Global + Church-specific)
+// --------------------
+
+// ✅ Global members (general, not tied to a single church)
+Route::resource('members', MemberController::class)->middleware(['auth']);
+
+// ✅ Church-specific members
+Route::prefix('churches/{church}')->middleware(['auth'])->group(function () {
+    Route::resource('members', MemberController::class)->names('churches.members');
+});
+
+// --------------------
+// Donations (Global + Church-specific)
+// --------------------
+
+// ✅ Global donations
+Route::resource('donations', DonationController::class)->middleware(['auth']);
+
+// ✅ Alias for dashboard usage (so route('donations.all') works)
+Route::get('/donations-all', [DonationController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('donations.all');
+
+// ✅ Church-specific donations
+Route::prefix('churches/{church}')->middleware(['auth'])->group(function () {
+    Route::resource('donations', DonationController::class)->names('churches.donations');
+});
+
+// --------------------
+// Auth routes
+// --------------------
 require __DIR__.'/auth.php';

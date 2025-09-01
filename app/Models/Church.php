@@ -77,4 +77,27 @@ class Church extends Model
     {
         return $this->hasMany(Member::class);
     }
+
+    public function donations()
+    {
+        return $this->hasMany(Donation::class);
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+    /**
+     * Many-to-Many Relationship with Users
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'church_user');
+    }
 }
