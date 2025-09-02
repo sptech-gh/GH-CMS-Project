@@ -20,19 +20,21 @@ class EventController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'start_time' => 'required|date',
-            'end_time' => 'nullable|date|after_or_equal:start_time',
-        ]);
+    { $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'date' => 'required|date',
+    ]);
 
-        $validated['church_id'] = Auth::user()->church_id;
+    // Attach church_id automatically from logged-in user
+    $event = new \App\Models\Event();
+    $event->title = $request->title;
+    $event->description = $request->description;
+    $event->date = $request->date;
+    $event->church_id = auth()->user()->church_id; // ✅ Fix
+    $event->save();
 
-        Event::create($validated);
-
-        return redirect()->route('events.index')->with('success', 'Event created successfully!');
+    return redirect()->route('events.index')->with('success', 'Event created successfully.');
     }
 
     public function show(Event $event)

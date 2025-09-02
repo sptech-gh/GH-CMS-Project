@@ -1,60 +1,63 @@
+{{-- resources/views/donations/index.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-
-    <h1 class="text-2xl font-bold mb-6 bg-ghana-gradient bg-clip-text text-ghana-gradient">
-        @if(isset($church))
-            {{ $church->name }} Donations
-        @else
-            All Donations
-        @endif
+<div class="p-6">
+    {{-- Page Title --}}
+    <h1 class="text-2xl font-bold mb-4 text-ghana-red">
+        {{ isset($church) ? $church->name . ' Donations' : 'All Donations' }}
     </h1>
 
-    <div class="mb-4">
-        <a href="{{ isset($church) ? route('churches.donations.create', $church) : route('donations.create') }}"
-           class="px-4 py-2 bg-ghana-gradient text-white rounded-lg shadow hover:opacity-90 transition">
-            Add New Donation
-        </a>
-    </div>
+    {{-- Add Donation Button --}}
+    <a href="{{ isset($church)
+                ? route('churches.donations.create', $church->id)
+                : route('donations.create') }}"
+       class="bg-ghana-green text-white px-4 py-2 rounded shadow hover:bg-ghana-yellow hover:text-black">
+        ➕ Add Donation
+    </a>
 
-    <div class="bg-white shadow-lg rounded-lg p-6 border-t-4 border-ghana-gradient">
-        @if($donations->isEmpty())
-            <p class="text-gray-500">No donations found.</p>
-        @else
-            <table class="w-full border-collapse">
-                <thead>
-                    <tr class="bg-ghana-gradient bg-opacity-20 text-ghBlack">
-                        <th class="p-3 border">Donor</th>
-                        <th class="p-3 border">Amount</th>
-                        <th class="p-3 border">Date</th>
-                        <th class="p-3 border">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($donations as $donation)
-                        <tr class="hover:bg-ghana-gradient hover:bg-opacity-10">
-                            <td class="p-3 border">{{ $donation->donor_name ?? 'Anonymous' }}</td>
-                            <td class="p-3 border">₵{{ number_format($donation->amount, 2) }}</td>
-                            <td class="p-3 border">{{ $donation->created_at->format('M d, Y') }}</td>
-                            <td class="p-3 border flex gap-2">
-                                <a href="{{ route('donations.edit', $donation) }}" class="px-3 py-1 bg-ghGold text-white rounded hover:opacity-90 transition">
-                                    Edit
-                                </a>
-                                <form action="{{ route('donations.destroy', $donation) }}" method="POST" onsubmit="return confirm('Are you sure?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="px-3 py-1 bg-ghRed text-white rounded hover:opacity-90 transition">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-    </div>
+    {{-- Donations Table --}}
+    <table class="w-full mt-6 border-collapse border border-gray-200">
+        <thead class="bg-ghana-yellow text-black">
+            <tr>
+                <th class="p-2 border">Donor</th>
+                <th class="p-2 border">Amount</th>
+                <th class="p-2 border">Date</th>
+                <th class="p-2 border">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($donations as $donation)
+                <tr>
+                    <td class="p-2 border">{{ $donation->donor_name }}</td>
+                    <td class="p-2 border">{{ $donation->amount }}</td>
+                    <td class="p-2 border">{{ $donation->date }}</td>
+                    <td class="p-2 border">
+                        {{-- Edit --}}
+                        <a href="{{ isset($church)
+                                    ? route('churches.donations.edit', [$church->id, $donation->id])
+                                    : route('donations.edit', $donation->id) }}"
+                           class="text-ghana-blue font-medium hover:underline">✏️ Edit</a>
 
+                        {{-- Delete --}}
+                        <form action="{{ isset($church)
+                                        ? route('churches.donations.destroy', [$church->id, $donation->id])
+                                        : route('donations.destroy', $donation->id) }}"
+                              method="POST" class="inline-block ml-2">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="text-ghana-red font-medium hover:underline"
+                                    onclick="return confirm('Are you sure?')">🗑 Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4" class="p-4 text-center text-gray-500">No donations found</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 </div>
 @endsection

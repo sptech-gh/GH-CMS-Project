@@ -1,71 +1,43 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold text-gray-800">
-            Record Donation – {{ $church->name }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="bg-white shadow rounded-lg p-6">
-        <form method="POST" action="{{ route('donations.store', $church->slug) }}" class="space-y-6">
-            @csrf
+@section('content')
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-4 text-ghana-red">
+        {{ isset($church) ? $church->name . ' - Add Donation' : 'Add Donation' }}
+    </h1>
 
-            <!-- Donor -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Donor (optional)</label>
-                <select name="member_id" class="mt-1 block w-full rounded-lg border-gray-300">
-                    <option value="">Anonymous</option>
-                    @foreach($church->members as $member)
-                        <option value="{{ $member->id }}" {{ old('member_id') == $member->id ? 'selected' : '' }}>
-                            {{ $member->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @error('member_id')
-                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+    {{-- Donation Form --}}
+    <form method="POST" action="{{ isset($church)
+                                    ? route('churches.donations.store', $church->id)
+                                    : route('donations.store') }}">
+        @csrf
 
-            <!-- Amount -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Amount (₵)</label>
-                <input type="number" step="0.01" name="amount" value="{{ old('amount') }}" required
-                       class="mt-1 block w-full rounded-lg border-gray-300"/>
-                @error('amount')
-                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+        {{-- Donor Name --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Donor Name</label>
+            <input type="text" name="donor_name" value="{{ old('donor_name') }}"
+                   class="w-full border rounded px-3 py-2" required>
+        </div>
 
-            <!-- Method -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Payment Method</label>
-                <select name="method" class="mt-1 block w-full rounded-lg border-gray-300">
-                    <option value="cash" {{ old('method')=='cash' ? 'selected' : '' }}>Cash</option>
-                    <option value="mobile_money" {{ old('method')=='mobile_money' ? 'selected' : '' }}>Mobile Money</option>
-                    <option value="card" {{ old('method')=='card' ? 'selected' : '' }}>Card</option>
-                    <option value="bank_transfer" {{ old('method')=='bank_transfer' ? 'selected' : '' }}>Bank Transfer</option>
-                </select>
-                @error('method')
-                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+        {{-- Amount --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Amount</label>
+            <input type="number" name="amount" value="{{ old('amount') }}" step="0.01"
+                   class="w-full border rounded px-3 py-2" required>
+        </div>
 
-            <!-- Notes -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Notes</label>
-                <textarea name="notes" rows="3"
-                          class="mt-1 block w-full rounded-lg border-gray-300">{{ old('notes') }}</textarea>
-                @error('notes')
-                    <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+        {{-- Date --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Date</label>
+            <input type="date" name="date" value="{{ old('date') }}"
+                   class="w-full border rounded px-3 py-2" required>
+        </div>
 
-            <!-- Actions -->
-            <div class="flex justify-end">
-                <button type="submit"
-                        class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                    Save Donation
-                </button>
-            </div>
-        </form>
-    </div>
-</x-app-layout>
+        {{-- Submit --}}
+        <button type="submit"
+                class="bg-ghana-green text-white px-4 py-2 rounded shadow hover:bg-ghana-yellow hover:text-black">
+            Save Donation
+        </button>
+    </form>
+</div>
+@endsection

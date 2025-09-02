@@ -1,57 +1,43 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-6">
-
-    <h1 class="text-2xl font-bold mb-6 bg-ghana-gradient bg-clip-text text-ghana-gradient">
-        Edit Event
+<div class="p-6">
+    <h1 class="text-2xl font-bold mb-4 text-ghana-red">
+        {{ isset($church) ? $church->name . ' - Edit Event' : 'Edit Event' }}
     </h1>
 
-    <div class="bg-white shadow-lg rounded-lg p-8 border-t-4 border-ghana-gradient">
-        <form action="{{ route('events.update', $event) }}" method="POST">
-            @csrf
-            @method('PUT')
+    {{-- Event Form --}}
+    <form method="POST" action="{{ isset($church)
+                                    ? route('churches.events.update', [$church->id, $event->id])
+                                    : route('events.update', $event->id) }}">
+        @csrf
+        @method('PUT')
 
-            <!-- Event Title -->
-            <div class="mb-4">
-                <label for="title" class="block text-ghBlack font-semibold mb-2">Event Title</label>
-                <input type="text" id="title" name="title" value="{{ old('title', $event->title) }}" required
-                       class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-ghana-gradient @error('title') border-red-500 @enderror">
-                @error('title')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+        {{-- Title --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Title</label>
+            <input type="text" name="title" value="{{ old('title', $event->title) }}"
+                   class="w-full border rounded px-3 py-2" required>
+        </div>
 
-            <!-- Event Description -->
-            <div class="mb-4">
-                <label for="description" class="block text-ghBlack font-semibold mb-2">Description</label>
-                <textarea id="description" name="description" rows="4" required
-                          class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-ghana-gradient @error('description') border-red-500 @enderror">{{ old('description', $event->description) }}</textarea>
-                @error('description')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+        {{-- Description --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Description</label>
+            <textarea name="description" class="w-full border rounded px-3 py-2" required>{{ old('description', $event->description) }}</textarea>
+        </div>
 
-            <!-- Event Date -->
-            <div class="mb-4">
-                <label for="date" class="block text-ghBlack font-semibold mb-2">Event Date</label>
-                <input type="date" id="date" name="date" value="{{ old('date', $event->date->format('Y-m-d')) }}" required
-                       class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-ghana-gradient @error('date') border-red-500 @enderror">
-                @error('date')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
+        {{-- Date --}}
+        <div class="mb-4">
+            <label class="block font-semibold mb-1">Date</label>
+            <input type="date" name="date" value="{{ old('date', $event->date) }}"
+                   class="w-full border rounded px-3 py-2" required>
+        </div>
 
-            <div class="flex justify-between items-center">
-                <a href="{{ route('events.index') }}" class="px-6 py-2 border-2 border-ghRed text-ghRed rounded-lg hover:bg-gray-100 hover:text-ghGold transition">
-                    Cancel
-                </a>
-                <button type="submit" class="px-6 py-2 bg-ghana-gradient text-white rounded-lg font-bold hover:opacity-90 transition">
-                    Update Event
-                </button>
-            </div>
-        </form>
-    </div>
-
+        {{-- Submit --}}
+        <button type="submit"
+                class="bg-ghana-green text-white px-4 py-2 rounded shadow hover:bg-ghana-yellow hover:text-black">
+            Update Event
+        </button>
+    </form>
 </div>
 @endsection

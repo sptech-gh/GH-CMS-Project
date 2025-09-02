@@ -49,6 +49,6 @@ class User extends Authenticatable
      */
     public function churches()
     {
-        return $this->belongsToMany(Church::class, 'church_user');
+          return $this->belongsTo(\App\Models\Church::class);
     }
 }
