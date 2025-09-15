@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 @extends('layouts.app')
 
 @section('title', 'Donations')
@@ -73,6 +74,8 @@
         </div>
     @endif
 =======
+=======
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
 {{-- resources/views/donations/index.blade.php --}}
 @extends('layouts.app')
 
@@ -134,6 +137,9 @@
             @endforelse
         </tbody>
     </table>
+<<<<<<< HEAD
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
+=======
 >>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
 </div>
 @endsection

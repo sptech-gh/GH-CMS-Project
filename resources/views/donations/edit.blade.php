@@ -2,6 +2,7 @@
 
 @section('content')
 <<<<<<< HEAD
+<<<<<<< HEAD
 <div class="bg-white shadow rounded p-6">
     <h1 class="text-2xl font-bold text-[#006B3F] mb-4">Edit Donation</h1>
 
@@ -25,6 +26,8 @@
 
         <button class="bg-[#FCD116] px-4 py-2 rounded shadow hover:bg-[#CE1126] hover:text-white">Update</button>
 =======
+=======
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
 <div class="p-6">
     <h1 class="text-2xl font-bold mb-4 text-ghana-red">
         {{ isset($church) ? $church->name . ' - Edit Donation' : 'Edit Donation' }}
@@ -63,6 +66,9 @@
                 class="bg-ghana-green text-white px-4 py-2 rounded shadow hover:bg-ghana-yellow hover:text-black">
             Update Donation
         </button>
+<<<<<<< HEAD
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
+=======
 >>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     </form>
 </div>

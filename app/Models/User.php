@@ -17,7 +17,11 @@ class User extends Authenticatable implements FilamentUser
         'name',
         'email',
         'password',
+<<<<<<< HEAD
         'church_id', // still used for members
+=======
+        // Removed 'church_id' because user can belong to multiple churches
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     ];
 
     protected $hidden = [
@@ -34,6 +38,7 @@ class User extends Authenticatable implements FilamentUser
     }
 
     /**
+<<<<<<< HEAD
      * Admin/Pastor/Assistant can manage multiple churches (via pivot).
      */
     public function churches(): BelongsToMany
@@ -94,5 +99,12 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->isAdminOrPastor();
+=======
+     * Many-to-Many Relationship: A user can belong to multiple churches
+     */
+    public function churches()
+    {
+          return $this->belongsTo(\App\Models\Church::class);
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     }
 }

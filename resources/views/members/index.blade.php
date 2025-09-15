@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -78,6 +79,13 @@
 @section('content')
 <div class="container mx-auto px-4 py-6">
 
+=======
+@extends('layouts.app')
+
+@section('content')
+<div class="container mx-auto px-4 py-6">
+
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     <h1 class="text-2xl font-bold mb-6 bg-ghana-gradient bg-clip-text text-ghana-gradient">
         @if(isset($church))
             {{ $church->name }} Members
@@ -131,6 +139,9 @@
                 </tbody>
             </table>
         @endif
+<<<<<<< HEAD
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
+=======
 >>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     </div>
 

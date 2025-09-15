@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 @section('title', 'Add Donation')
 
 @section('content')
@@ -29,6 +30,8 @@
     <a href="{{ route('donations.index') }}" class="ml-4 text-gray-700 hover:underline">Cancel</a>
 </form>
 =======
+=======
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
 @section('content')
 <div class="p-6">
     <h1 class="text-2xl font-bold mb-4 text-ghana-red">
@@ -69,5 +72,8 @@
         </button>
     </form>
 </div>
+<<<<<<< HEAD
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
+=======
 >>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
 @endsection

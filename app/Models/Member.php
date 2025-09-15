@@ -14,6 +14,7 @@ class Member extends Model
         'name',
         'email',
         'phone',
+<<<<<<< HEAD
         'church_id',
     ];
 
@@ -35,6 +36,18 @@ class Member extends Model
         });
     }
 
+=======
+        'address',
+        'dob',
+        'gender',
+        'joined_at',
+        'status',
+    ];
+
+    /**
+     * Relationships
+     */
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     public function church()
     {
         return $this->belongsTo(Church::class);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Illuminate\Http\Request;
+<<<<<<< HEAD
 
 class EventController extends Controller
 {
@@ -71,36 +72,85 @@ class EventController extends Controller
     /**
      * Display the specified event details.
      */
+=======
+use Illuminate\Support\Facades\Auth;
+
+class EventController extends Controller
+{
+    public function index()
+    {
+        $events = Event::where('church_id', Auth::user()->church_id)->get();
+        return view('events.index', compact('events'));
+    }
+
+    public function create()
+    {
+        return view('events.create');
+    }
+
+    public function store(Request $request)
+    { $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'date' => 'required|date',
+    ]);
+
+    // Attach church_id automatically from logged-in user
+    $event = new \App\Models\Event();
+    $event->title = $request->title;
+    $event->description = $request->description;
+    $event->date = $request->date;
+    $event->church_id = auth()->user()->church_id; // ✅ Fix
+    $event->save();
+
+    return redirect()->route('events.index')->with('success', 'Event created successfully.');
+    }
+
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     public function show(Event $event)
     {
         $this->authorizeEvent($event);
         return view('events.show', compact('event'));
     }
 
+<<<<<<< HEAD
     /**
      * Show the form for editing the specified event.
      */
+=======
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     public function edit(Event $event)
     {
         $this->authorizeEvent($event);
         return view('events.edit', compact('event'));
     }
 
+<<<<<<< HEAD
     /**
      * Update the specified event in the current church.
      */
+=======
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     public function update(Request $request, Event $event)
     {
         $this->authorizeEvent($event);
 
         $validated = $request->validate([
+<<<<<<< HEAD
             'title'       => 'required|string|max:255',
             'event_date'  => 'required|date',
             'description' => 'nullable|string',
+=======
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'start_time' => 'required|date',
+            'end_time' => 'nullable|date|after_or_equal:start_time',
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
         ]);
 
         $event->update($validated);
 
+<<<<<<< HEAD
         return redirect()
             ->route('events.index')
             ->with('success', '✏️ Event updated successfully.');
@@ -109,11 +159,17 @@ class EventController extends Controller
     /**
      * Remove the specified event from the current church.
      */
+=======
+        return redirect()->route('events.index')->with('success', 'Event updated successfully!');
+    }
+
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     public function destroy(Event $event)
     {
         $this->authorizeEvent($event);
         $event->delete();
 
+<<<<<<< HEAD
         return redirect()
             ->route('events.index')
             ->with('success', '🗑️ Event deleted successfully.');
@@ -149,6 +205,15 @@ class EventController extends Controller
 
         if (! in_array($role, ['pastor', 'admin'])) {
             abort(403, '🚫 Only Pastor or Admin can perform this action.');
+=======
+        return redirect()->route('events.index')->with('success', 'Event deleted successfully!');
+    }
+
+    private function authorizeEvent(Event $event)
+    {
+        if ($event->church_id !== Auth::user()->church_id) {
+            abort(403, 'Unauthorized action.');
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
         }
     }
 }

@@ -92,7 +92,14 @@ class Church extends Model
         return $this->hasMany(Donation::class);
     }
 
+<<<<<<< HEAD
 
+=======
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
 
     public function expenses()
     {
@@ -102,5 +109,12 @@ class Church extends Model
     /**
      * Many-to-Many Relationship with Users
      */
+<<<<<<< HEAD
 
+=======
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'church_user');
+    }
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
 }

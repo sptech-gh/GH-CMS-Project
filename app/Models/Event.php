@@ -10,6 +10,7 @@ class Event extends Model
     use HasFactory;
 
     protected $fillable = [
+<<<<<<< HEAD
         'title',
         'description',
         'event_date',
@@ -46,5 +47,17 @@ class Event extends Model
                 $event->church_id = app('currentChurch')->id;
             }
         });
+=======
+        'church_id',
+        'title',
+        'description',
+        'start_time',
+        'end_time',
+    ];
+
+    public function church()
+    {
+        return $this->belongsTo(\App\Models\Church::class);
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
     }
 }

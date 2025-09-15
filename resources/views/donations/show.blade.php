@@ -4,6 +4,7 @@
 
 @section('content')
 <<<<<<< HEAD
+<<<<<<< HEAD
 <h1 class="text-3xl font-bold mb-6 text-blue-700">💵 Donation Details</h1>
 
 <div class="bg-white p-6 rounded shadow max-w-md">
@@ -14,6 +15,8 @@
 
     <a href="{{ route('donations.index') }}" class="mt-4 inline-block px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600">Back to Donations</a>
 =======
+=======
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
 <div class="container mx-auto px-4 py-6">
     <!-- Back button -->
     <a href="{{ route('donations.all') }}"
@@ -81,6 +84,9 @@
             </button>
         </form>
     </div>
+<<<<<<< HEAD
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
+=======
 >>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
 </div>
 @endsection
