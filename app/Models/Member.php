@@ -13,13 +13,27 @@ class Member extends Model
         'name',
         'email',
         'phone',
-        'address',
-        'date_of_birth',
-        'gender',
         'church_id',
     ];
 
-    // Relationship: a member belongs to a church
+    /**
+     * Auto-scope members to the current church.
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope('church', function ($query) {
+            if (app()->bound('currentChurch') && app('currentChurch')) {
+                $query->where('church_id', app('currentChurch')->id);
+            }
+        });
+
+        static::creating(function ($member) {
+            if (app()->bound('currentChurch') && app('currentChurch')) {
+                $member->church_id = app('currentChurch')->id;
+            }
+        });
+    }
+
     public function church()
     {
         return $this->belongsTo(Church::class);

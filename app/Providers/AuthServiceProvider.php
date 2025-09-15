@@ -17,6 +17,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         // Register your model => policy mapping here
         Church::class => ChurchPolicy::class,
+        Event::class => EventPolicy::class,
     ];
 
     /**

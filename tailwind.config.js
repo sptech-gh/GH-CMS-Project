@@ -13,15 +13,16 @@ export default {
             fontFamily: {
                 sans: ["Figtree", ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                "ghana-red": "#CE1126",
+                "ghana-yellow": "#FCD116",
+                "ghana-green": "#006B3F",
+                "ghana-black": "#000000",
+                "ghana-gold": "#FFD700",
+            },
             backgroundImage: {
                 "ghana-gradient":
                     "linear-gradient(90deg, #006b3f, #fcd116, #ce1126)",
-            },
-            textColor: {
-                "ghana-gradient": "transparent", // fallback
-            },
-            backgroundClip: {
-                text: "text",
             },
         },
     },

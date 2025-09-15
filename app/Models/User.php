@@ -2,53 +2,97 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'church_id', // ✅ Allow mass assignment
+        'church_id', // still used for members
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * A member belongs to a single church (via church_id).
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    public function church(): BelongsTo
+    {
+        return $this->belongsTo(Church::class, 'church_id');
+    }
 
     /**
-     * ✅ Relationship: A user belongs to a church (nullable).
+     * Admin/Pastor/Assistant can manage multiple churches (via pivot).
      */
-    public function church()
+    public function churches(): BelongsToMany
     {
-        return $this->belongsTo(Church::class);
+        return $this->belongsToMany(Church::class, 'church_user')
+            ->withPivot('role') // pivot role: admin, pastor, assistant
+            ->withTimestamps();
+    }
+
+    /**
+     * Convenience: return the member’s single church, or null if not a member.
+     */
+    public function memberChurch(): ?Church
+    {
+        return $this->church; // since members are tied via church_id
+    }
+
+    /**
+     * Check if the user has a role in a given church.
+     */
+    public function hasChurchRole(Church $church, array $roles): bool
+    {
+        $membership = $this->churches()
+            ->where('church_user.church_id', $church->id)
+            ->select('church_user.role') // ✅ explicit
+            ->first();
+
+        return $membership && in_array($membership->pivot->role, $roles);
+    }
+
+    /**
+     * Check if user manages multiple churches.
+     */
+    public function hasMultipleChurches(): bool
+    {
+        return $this->churches()->count() > 1;
+    }
+
+    /**
+     * Check if user is Admin or Pastor in a given church.
+     */
+    public function isAdminOrPastor(?Church $church = null): bool
+    {
+        if ($church) {
+            return $this->hasChurchRole($church, ['admin', 'pastor']);
+        }
+
+        // ✅ fix ambiguity by prefixing role column
+        return $this->churches()
+            ->whereIn('church_user.role', ['admin', 'pastor'])
+            ->exists();
+    }
+
+    /**
+     * Restrict who can access the Filament panel.
+     * Only admins and pastors are allowed.
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        return $this->isAdminOrPastor();
     }
 }

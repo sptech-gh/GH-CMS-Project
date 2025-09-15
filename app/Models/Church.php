@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Church extends Model
 {
@@ -15,55 +17,49 @@ class Church extends Model
         'slug',
         'location',
         'region',
-        'pastor_name',
         'founded_at',
         'description',
     ];
 
     /**
-     * Boot model events for slug handling.
+     * Members belonging to this church (regular users via church_id).
      */
-    protected static function boot()
+    public function members(): HasMany
     {
-        parent::boot();
-
-        static::creating(function ($church) {
-            if (empty($church->slug)) {
-                $church->slug = static::generateUniqueSlug($church->name);
-            }
-        });
-
-        static::updating(function ($church) {
-            // Only regenerate slug if name has changed
-            if ($church->isDirty('name')) {
-                $church->slug = static::generateUniqueSlug($church->name, $church->id);
-            }
-        });
+        return $this->hasMany(User::class, 'church_id');
     }
 
     /**
-     * Generate a unique slug for church names.
+     * Admins/Pastors/Assistants assigned via pivot table.
      */
-    private static function generateUniqueSlug(string $name, $ignoreId = null): string
+    public function managers(): BelongsToMany
     {
-        $slug = Str::slug($name);
-        $originalSlug = $slug;
-        $counter = 1;
-
-        while (
-            static::where('slug', $slug)
-                ->when($ignoreId, fn($query) => $query->where('id', '!=', $ignoreId))
-                ->exists()
-        ) {
-            $slug = "{$originalSlug}-{$counter}";
-            $counter++;
-        }
-
-        return $slug;
+        return $this->belongsToMany(User::class, 'church_user')
+            ->withPivot('role') // role: admin, pastor, assistant
+            ->withTimestamps();
     }
 
     /**
-     * Use slug instead of ID in route model binding.
+     * Inverse of User::churches() relation.
+     * Allows attaching churches to a user in Filament.
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'church_user')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    /**
+     * Events that belong to this church.
+     */
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class, 'church_id');
+    }
+
+    /**
+     * Use slug for route-model binding.
      */
     public function getRouteKeyName(): string
     {
@@ -71,10 +67,23 @@ class Church extends Model
     }
 
     /**
-     * Relationships
+     * Automatically generate a unique slug on creation.
      */
-    public function members()
+    protected static function booted()
     {
-        return $this->hasMany(Member::class);
+        static::creating(function ($church) {
+            if (empty($church->slug)) {
+                $baseSlug = Str::slug($church->name);
+                $slug = $baseSlug;
+                $count = 1;
+
+                // Ensure uniqueness
+                while (self::where('slug', $slug)->exists()) {
+                    $slug = $baseSlug . '-' . $count++;
+                }
+
+                $church->slug = $slug;
+            }
+        });
     }
 }

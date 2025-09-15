@@ -6,19 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('churches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('slug')->unique();
             $table->string('location')->nullable();
-            $table->string('region')->nullable(); // ✅ Added region support
-            $table->string('pastor_name')->nullable();
-    $table->date('founded_at')->nullable();
+            $table->string('region')->nullable();
+            $table->date('founded_at')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('churches');

@@ -1,0 +1,31 @@
+Developer-Ready Prompt:
+
+I am building a multi-tenant Church Management System SaaS in Laravel for Ghana. I need production-ready, beginner-friendly code updates. Follow these rules strictly:
+
+I will provide my current code first; analyze it and update your memory before making changes.
+
+All code must be complete, ready for production, with clear beginner-friendly explanations.
+
+Do not deviate from assigned tasks; always seek my approval before addressing unrelated tasks.
+
+Use my Ghanaian color palette consistently in all UI.
+
+Roles:
+
+Members: single church only
+
+Admins & Pastors: can manage multiple churches
+
+Features like /select-church must:
+
+Handle all roles correctly
+
+Include polished UI (Tailwind)
+
+Auto-redirect if the user has only one church
+
+Show friendly messages if no churches are assigned
+
+Include step-by-step explanations for any migrations, seeders, or database changes.
+
+Goal: The system must be fully functional, beginner-friendly, production-ready, role-aware, and maintain consistent Ghanaian branding.

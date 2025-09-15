@@ -1,0 +1,122 @@
+[Login] 
+   |
+   v
+[Check Role]
+   |---------------------------|
+   |                           |
+[Member]                     [Admin/Pastor]
+   |                           |
+[memberChurch()]             Check session('current_church_id')
+   |                           |
+Set session                     v
+Redirect /dashboard      Show /select-church form
+                            |
+                         Store POST → set session
+                            |
+                         Redirect /dashboard
+
+
+1️⃣ Workflow Overview
+
+User logs in.
+
+System checks user role:
+
+Member → can only belong to one church.
+
+Admin/Pastor → can belong to multiple churches.
+
+Member workflow:
+
+Middleware fetches their single church using memberChurch() helper.
+
+Session key current_church_id is set automatically.
+
+Redirects to the dashboard.
+
+Admin/Pastor workflow:
+
+If no current_church_id in session, user sees church selection page.
+
+Can select one church from dropdown.
+
+Selected church ID stored in session (current_church_id).
+
+Redirects to dashboard.
+
+2️⃣ Key Components
+Component	Purpose	Notes
+User Model	Defines roles and church relationships	memberChurch() fetches a member’s church; hasMultipleChurches() for admins/pastors
+SetCurrentChurch Middleware	Ensures an active church is bound for every request	Avoids ambiguous SQL by selecting explicit columns
+RedirectMemberToChurch Middleware	Automatically sends members to their church dashboard	Prevents members from seeing admin/pastor pages
+Controller (ChurchController)	Handles GET/POST for selecting church	store() validates selection and updates session
+Blade View	UI for church selection	Ghanaian color palette, beginner-friendly, auto-redirect if single church
+3️⃣ Step-by-Step Request Flow
+Step A: Member Login
+
+Member logs in.
+
+HomeController or / route checks role.
+
+Calls $memberChurch = $user->memberChurch().
+
+Sets session(['current_church_id' => $memberChurch->id]).
+
+Redirects to /dashboard.
+
+✅ Member doesn’t see the selection page because they can only belong to one church.
+
+Step B: Admin/Pastor Login
+
+Admin/Pastor logs in.
+
+System checks session('current_church_id').
+
+If missing:
+
+Redirect to /select-church.
+
+Blade view displays dropdown of all churches assigned.
+
+Admin selects church → submits POST request to ChurchController@store.
+
+store() validates input and sets session('current_church_id').
+
+Redirects to /dashboard.
+
+✅ Admin/Pastor can manage multiple churches safely.
+
+Step C: Middleware Enforcement
+
+SetCurrentChurch ensures all protected routes know the active church.
+
+If a request is made without an active church, redirects back to /select-church.
+
+Binding currentChurch in app() makes it accessible globally:
+
+$currentChurch = app('currentChurch');
+
+Step D: Auto-Redirect on Blade
+
+If only one church exists, JS in Blade automatically redirects user after 1.5 seconds:
+
+@if($churches->count() === 1)
+<script>
+    setTimeout(() => {
+        window.location.href = "{{ route('dashboard') }}";
+    }, 1500);
+</script>
+@endif
+
+
+Ensures smooth UX for single-church users.
+
+4️⃣ Session & Security Notes
+
+Session key: current_church_id
+
+Used by middleware to know which church is active.
+
+Validation: ChurchController@store ensures user cannot select a church they don’t belong to.
+
+SQL safety: Middleware explicitly selects churches.id and churches.name to avoid ambiguous queries.

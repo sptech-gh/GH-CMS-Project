@@ -1,45 +1,60 @@
-<x-app-layout>
-    <!-- Header -->
-    <div class="bg-ghana-gradient text-white shadow rounded-2xl p-6 mb-8">
-        <h1 class="text-3xl font-bold">Welcome, {{ Auth::user()->name }} 👋</h1>
-        <p class="mt-2 text-sm opacity-90">
-            Here’s a quick overview of your church management system.
-        </p>
-    </div>
+<?php
 
-    <!-- Stats Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Churches -->
-        <div class="bg-white shadow rounded-2xl p-6 flex flex-col items-center">
-            <div class="text-4xl font-bold text-ghana-gradient">{{ $totalChurches }}</div>
-            <p class="mt-2 text-gray-600">Total Churches</p>
-        </div>
+namespace App\Http\Controllers;
 
-        <!-- Members -->
-        <div class="bg-white shadow rounded-2xl p-6 flex flex-col items-center">
-            <div class="text-4xl font-bold text-ghana-gradient">{{ $totalMembers }}</div>
-            <p class="mt-2 text-gray-600">Total Members</p>
-        </div>
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use App\Models\Church;
 
-        <!-- Placeholder for Growth / Future Stats -->
-        <div class="bg-white shadow rounded-2xl p-6 flex flex-col items-center">
-            <div class="text-4xl font-bold text-ghana-gradient">🚀</div>
-            <p class="mt-2 text-gray-600">More analytics coming soon</p>
-        </div>
-    </div>
+class DashboardController extends Controller
+{
+    /**
+     * Show the unified dashboard for Admins, Pastors, and Members.
+     */
+    public function index()
+    {
+        $user = Auth::user();
+        $churchId = session('current_church_id');
 
-    <!-- Quick Links -->
-    <div class="mt-10">
-        <h2 class="text-xl font-bold mb-4 text-ghana-gradient">Quick Actions</h2>
-        <div class="flex flex-wrap gap-4">
-            <a href="{{ route('churches.index') }}"
-               class="px-6 py-3 bg-ghana-gradient text-white rounded-xl shadow hover:opacity-90">
-                Manage Churches
-            </a>
-            <a href="{{ route('members.index') }}"
-               class="px-6 py-3 bg-ghana-gradient text-white rounded-xl shadow hover:opacity-90">
-                Manage Members
-            </a>
-        </div>
-    </div>
-</x-app-layout>
+        // 🚫 No church selected → redirect to selection page
+        if (!$churchId) {
+            return redirect()->route('select-church')
+                ->with('error', '🚫 Please select a church first.');
+        }
+
+        // 🔎 Ensure the user belongs to this church
+        $church = null;
+
+        if ($user->role === 'member') {
+            // Members only belong to ONE church (via church_id)
+            if ($user->church_id != $churchId) {
+                return redirect()->route('select-church')
+                    ->with('error', '🚫 Unauthorized church access.');
+            }
+            $church = $user->church;
+        } else {
+            // Admin/Pastor/Assistant → check via pivot
+            $church = $user->churches()->find($churchId);
+            if (!$church) {
+                return redirect()->route('select-church')
+                    ->with('error', '🚫 You are not assigned to this church.');
+            }
+        }
+
+        // Example: role-specific dashboard data
+        $stats = [];
+        if ($user->isAdminOrPastor($church)) {
+            $stats = [
+                'members_count' => $church->members()->count(),
+                'events_count'  => $church->events()->count(),
+                'donations_sum' => $church->donations()->sum('amount'),
+            ];
+        }
+
+        return view('dashboard.index', [
+            'user'   => $user,
+            'church' => $church,
+            'stats'  => $stats,
+        ]);
+    }
+}

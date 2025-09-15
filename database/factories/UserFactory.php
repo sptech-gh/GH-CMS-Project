@@ -2,29 +2,47 @@
 
 namespace Database\Factories;
 
-use App\Models\Church;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\User;
+use App\Models\Church;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     */
+    protected $model = User::class;
+
     public function definition(): array
     {
         return [
-            // Automatically assign an existing church OR create a new one
-            'church_id' => Church::inRandomOrder()->value('id') ?? Church::factory(),
-
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => bcrypt('password'), // Default password for seeded users
+            'password' => Hash::make('password'), // default password
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Configure the model after creating.
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (User $user) {
+            // Pick one or more random churches
+            $churches = Church::inRandomOrder()->take(rand(1, 2))->pluck('id');
+
+            if ($churches->isEmpty()) {
+                // If no churches exist, create some first
+                $churches = Church::factory(3)->create()->pluck('id');
+            }
+
+            // Attach with random role
+            foreach ($churches as $churchId) {
+                $user->churches()->attach($churchId, [
+                    'role' => $this->faker->randomElement(['admin', 'member']),
+                ]);
+            }
+        });
     }
 }

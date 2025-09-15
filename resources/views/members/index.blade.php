@@ -1,84 +1,75 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-2xl font-bold text-gray-800 leading-tight flex items-center gap-2">
-            👥 Members
-            <span class="text-sm font-medium text-gray-500">Manage and view all registered members</span>
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('👥 Members - ') }} {{ currentChurchName() }}
         </h2>
     </x-slot>
 
-    <div class="max-w-6xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-        <!-- Header Actions -->
-        <div class="bg-gradient-to-r from-red-600 via-yellow-400 to-green-600 p-6 flex flex-col sm:flex-row sm:justify-between sm:items-center">
-            <div class="mb-4 sm:mb-0">
-                <h3 class="text-xl font-semibold text-white">Members Directory</h3>
+            {{-- Quick Actions + Search --}}
+            <div class="flex flex-wrap justify-between items-center mb-4 space-y-2 sm:space-y-0">
+                <a href="{{ route('members.create') }}" class="px-4 py-2 bg-primary text-white rounded hover:bg-primary-dark">
+                    ➕ Add Member
+                </a>
+
+                <form method="GET" action="{{ route('members.index') }}" class="flex space-x-2">
+                    <input type="text" name="search" placeholder="Search by name or email..."
+                           value="{{ request('search') }}"
+                           class="px-3 py-2 border rounded w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <button type="submit" class="px-4 py-2 bg-accent text-white rounded hover:bg-accent-dark">
+                        Search
+                    </button>
+                </form>
             </div>
-            <a href="{{ route('members.create') }}"
-               class="inline-block px-5 py-3 font-bold text-white rounded-xl shadow-md bg-gradient-to-r from-yellow-400 to-green-600 hover:opacity-90 transition">
-                ➕ Add New Member
-            </a>
-        </div>
 
-        <!-- Flash Messages -->
-        @if(session('success'))
-            <div class="bg-green-100 text-green-800 px-4 py-3 text-sm font-semibold border-b border-green-200">
-                {{ session('success') }}
+            {{-- Members Table --}}
+            <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
+                @if($members->isEmpty())
+                    <p class="text-gray-600 mt-4">No members found.</p>
+                @else
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr class="bg-primary text-white">
+                                <th class="p-2 border">ID</th>
+                                <th class="p-2 border">Name</th>
+                                <th class="p-2 border">Email</th>
+                                <th class="p-2 border">Role</th>
+                                <th class="p-2 border">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($members as $member)
+                                <tr class="bg-white even:bg-gray-100 hover:bg-gray-50">
+                                    <td class="p-2 border">{{ $member->id }}</td>
+                                    <td class="p-2 border">{{ $member->name }}</td>
+                                    <td class="p-2 border">{{ $member->email }}</td>
+                                    <td class="p-2 border capitalize">{{ $member->role }}</td>
+                                    <td class="p-2 border flex flex-wrap space-x-2">
+                                        <a href="{{ route('members.edit', $member->id) }}" class="px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-500">
+                                            Edit
+                                        </a>
+                                        <form action="{{ route('members.destroy', $member->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-500"
+                                                    onclick="return confirm('Delete this member?')">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    {{-- Pagination --}}
+                    <div class="mt-4">
+                        {{ $members->withQueryString()->links() }}
+                    </div>
+                @endif
             </div>
-        @endif
-
-        <!-- Table -->
-        <div class="p-6 overflow-x-auto">
-            <table class="w-full border-collapse rounded-lg overflow-hidden">
-                <thead class="bg-gray-100 text-left">
-                    <tr>
-                        <th class="py-3 px-4 font-semibold text-gray-700">#</th>
-                        <th class="py-3 px-4 font-semibold text-gray-700">Name</th>
-                        <th class="py-3 px-4 font-semibold text-gray-700">Email</th>
-                        <th class="py-3 px-4 font-semibold text-gray-700">Phone</th>
-                        <th class="py-3 px-4 font-semibold text-gray-700">Church</th>
-                        <th class="py-3 px-4 font-semibold text-gray-700">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($members as $member)
-                        <tr class="border-b hover:bg-gray-50 transition">
-                            <td class="py-3 px-4">{{ $loop->iteration }}</td>
-                            <td class="py-3 px-4 font-bold text-gray-800">{{ $member->name }}</td>
-                            <td class="py-3 px-4 text-gray-700">{{ $member->email }}</td>
-                            <td class="py-3 px-4 text-gray-700">{{ $member->phone ?? 'N/A' }}</td>
-                            <td class="py-3 px-4 text-gray-700">{{ $member->church->name ?? 'N/A' }}</td>
-                            <td class="py-3 px-4 flex flex-wrap gap-2">
-                                <a href="{{ route('members.show', $member->id) }}"
-                                   class="px-3 py-2 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-green-600 to-yellow-400 hover:opacity-90 transition">
-                                    👁 View
-                                </a>
-                                <a href="{{ route('members.edit', $member->id) }}"
-                                   class="px-3 py-2 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-yellow-400 to-green-600 hover:opacity-90 transition">
-                                    ✏️ Edit
-                                </a>
-                                <form action="{{ route('members.destroy', $member->id) }}" method="POST"
-                                      onsubmit="return confirm('Are you sure you want to delete this member?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            class="px-3 py-2 text-sm font-semibold text-white rounded-lg bg-gradient-to-r from-red-600 to-yellow-400 hover:opacity-90 transition">
-                                        🗑 Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="py-6 text-center text-gray-500">No members found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination -->
-        <div class="p-6 border-t">
-            {{ $members->links() }}
         </div>
     </div>
 </x-app-layout>

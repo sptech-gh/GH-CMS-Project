@@ -9,14 +9,21 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
+        $table->id();
+        $table->string('name');
+        $table->string('email')->unique();
+        $table->timestamp('email_verified_at')->nullable();
+        $table->string('password');
+
+        // NEW: role column (admin | member)
+        $table->enum('role', ['admin', 'member'])->default('member');
+
+        // For members only
+        $table->foreignId('church_id')->nullable()->constrained()->onDelete('cascade');
+
+        $table->rememberToken();
+        $table->timestamps();
+    });
     }
 
     public function down(): void
