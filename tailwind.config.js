@@ -21,6 +21,7 @@ export default {
                 "ghana-gold": "#FFD700",
             },
             backgroundImage: {
+                // Ghana flag gradient — use as: bg-ghana-gradient
                 "ghana-gradient":
                     "linear-gradient(90deg, #006b3f, #fcd116, #ce1126)",
             },

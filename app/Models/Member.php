@@ -10,6 +10,7 @@ class Member extends Model
     use HasFactory;
 
     protected $fillable = [
+        'church_id',
         'name',
         'email',
         'phone',
@@ -37,5 +38,11 @@ class Member extends Model
     public function church()
     {
         return $this->belongsTo(Church::class);
+    }
+
+    public function donations()
+    {
+        // One member can have many donations
+        return $this->hasMany(Donation::class);
     }
 }

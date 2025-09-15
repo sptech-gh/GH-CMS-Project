@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -71,5 +72,67 @@
                 @endif
             </div>
         </div>
+=======
+@extends('layouts.app')
+
+@section('content')
+<div class="container mx-auto px-4 py-6">
+
+    <h1 class="text-2xl font-bold mb-6 bg-ghana-gradient bg-clip-text text-ghana-gradient">
+        @if(isset($church))
+            {{ $church->name }} Members
+        @else
+            All Members
+        @endif
+    </h1>
+
+    <div class="mb-4">
+        <a href="{{ isset($church) ? route('churches.members.create', $church) : route('members.create') }}"
+           class="px-4 py-2 bg-ghana-gradient text-white rounded-lg shadow hover:opacity-90 transition">
+            Add New Member
+        </a>
     </div>
-</x-app-layout>
+
+    <div class="bg-white shadow-lg rounded-lg p-6 border-t-4 border-ghana-gradient">
+        @if($members->isEmpty())
+            <p class="text-gray-500">No members found.</p>
+        @else
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-ghana-gradient bg-opacity-20 text-ghBlack">
+                        <th class="p-3 border">Name</th>
+                        <th class="p-3 border">Email</th>
+                        <th class="p-3 border">Phone</th>
+                        <th class="p-3 border">Joined</th>
+                        <th class="p-3 border">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($members as $member)
+                        <tr class="hover:bg-ghana-gradient hover:bg-opacity-10">
+                            <td class="p-3 border">{{ $member->name }}</td>
+                            <td class="p-3 border">{{ $member->email }}</td>
+                            <td class="p-3 border">{{ $member->phone ?? 'N/A' }}</td>
+                            <td class="p-3 border">{{ $member->created_at->format('M d, Y') }}</td>
+                            <td class="p-3 border flex gap-2">
+                                <a href="{{ route('members.edit', $member) }}" class="px-3 py-1 bg-ghGold text-white rounded hover:opacity-90 transition">
+                                    Edit
+                                </a>
+                                <form action="{{ route('members.destroy', $member) }}" method="POST" onsubmit="return confirm('Are you sure?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="px-3 py-1 bg-ghRed text-white rounded hover:opacity-90 transition">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+>>>>>>> 22256e915ff603451dbe247432fe9aeed33a3603
+    </div>
+
+</div>
+@endsection

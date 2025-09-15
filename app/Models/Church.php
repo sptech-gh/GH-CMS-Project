@@ -86,4 +86,21 @@ class Church extends Model
             }
         });
     }
+
+    public function donations()
+    {
+        return $this->hasMany(Donation::class);
+    }
+
+
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
+
+    /**
+     * Many-to-Many Relationship with Users
+     */
+
 }
