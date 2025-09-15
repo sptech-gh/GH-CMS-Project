@@ -1,59 +1,109 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+      x-data="{ sidebarOpen: false, sidebarCollapsed: false, userMenuOpen: false }" x-cloak>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>{{ config('app.name', 'Church Management System') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
-<link rel="alternate icon" href="{{ asset('favicon.ico') }}">
-<link rel="apple-touch-icon" href="{{ asset('favicon.png') }}">
-
 </head>
-<body class="font-sans antialiased bg-gray-100">
+<body class="flex bg-gray-100 min-h-screen">
 
-    <!-- Main Navbar -->
-    @include('layouts.navigation')
+    <!-- Sidebar -->
+    <div
+        x-show="sidebarOpen"
+        @click.away="sidebarOpen = false"
+        class="fixed inset-0 z-30 flex lg:static lg:inset-auto lg:translate-x-0 transition-transform duration-300"
+        :class="{ '-translate-x-full': !sidebarOpen, 'translate-x-0': sidebarOpen }">
 
-    <!-- Page Container -->
-    <div class="min-h-screen">
+        <!-- Sidebar Component -->
+        <x-sidebar :church="$church ?? null" :collapsed="sidebarCollapsed" />
+    </div>
 
-        <!-- Page Header -->
-        @isset($header)
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col transition-all duration-200"
+         :class="{ 'lg:ml-64': !sidebarCollapsed, 'lg:ml-20': sidebarCollapsed }">
+
+        <!-- Top Navbar -->
+        <div class="flex items-center justify-between
+                    bg-ghana-gradient text-white
+                    px-4 py-3 shadow-md">
+
+            <!-- Mobile Sidebar Toggle -->
+            <button @click="sidebarOpen = !sidebarOpen"
+                    class="lg:hidden p-2 rounded-md hover:bg-black/10">
+                ☰
+            </button>
+
+            <!-- Right Section -->
+            <div class="flex items-center space-x-6">
+
+                <!-- Collapse Toggle (desktop) -->
+                <button @click="sidebarCollapsed = !sidebarCollapsed"
+                        class="hidden lg:inline-flex p-2 rounded-md hover:bg-black/10">
+                    <span x-show="!sidebarCollapsed">⬅️</span>
+                    <span x-show="sidebarCollapsed">➡️</span>
+                </button>
+
+                <!-- User Dropdown -->
+                <div class="relative" x-data="{ open: false }">
+                    @auth
+                        <button @click="open = !open"
+                                class="flex items-center focus:outline-none hover:bg-black/10 px-3 py-2 rounded-md">
+                            <span class="mr-2">{{ Auth::user()->name }}</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div x-show="open" @click.away="open = false"
+                             class="absolute right-0 mt-2 w-56 bg-white text-gray-700 rounded-lg shadow-md overflow-hidden z-40">
+
+                            <!-- Churches List -->
+                            @if(Auth::user()->churches && Auth::user()->churches->count())
+                                <div class="px-4 py-2 text-xs text-gray-500 font-semibold">
+                                    Your Churches
+                                </div>
+                                @foreach(Auth::user()->churches as $church)
+                                    <a href="{{ route('church.show', $church) }}"
+                                       class="block px-4 py-2 hover:bg-gray-100">
+                                        {{ $church->name }}
+                                    </a>
+                                @endforeach
+                                <hr class="border-gray-200">
+                            @endif
+
+                            <!-- Logout -->
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit"
+                                        class="w-full text-left px-4 py-2 hover:bg-gray-100">
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    @endauth
+
+                    @guest
+                        <a href="{{ route('login') }}"
+                           class="px-3 py-2 rounded-md bg-yellow-500 hover:bg-yellow-600 text-white">
+                            Login
+                        </a>
+                    @endguest
                 </div>
-            </header>
-        @endisset
-
-        <!-- Page Content -->
-        <main class="py-8">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-                <!-- Flash Messages -->
-                @if (session('success'))
-                    <div class="mb-4 rounded-lg p-4 bg-green-100 border border-green-300 text-green-700 shadow">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
-                @if (session('error'))
-                    <div class="mb-4 rounded-lg p-4 bg-red-100 border border-red-300 text-red-700 shadow">
-                        {{ session('error') }}
-                    </div>
-                @endif
-
-                <!-- Slot (Page Body) -->
-                <div class="bg-white shadow sm:rounded-lg p-6">
-                    {{ $slot }}
-                </div>
-
             </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <main class="flex-1 p-6">
+            @yield('content')
         </main>
     </div>
 
+    @livewireScripts
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

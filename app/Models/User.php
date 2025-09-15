@@ -21,7 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'church_id', // ✅ Allow mass assignment
+        // Removed 'church_id' because user can belong to multiple churches
     ];
 
     /**
@@ -45,10 +45,10 @@ class User extends Authenticatable
     ];
 
     /**
-     * ✅ Relationship: A user belongs to a church (nullable).
+     * Many-to-Many Relationship: A user can belong to multiple churches
      */
-    public function church()
+    public function churches()
     {
-        return $this->belongsTo(Church::class);
+          return $this->belongsTo(\App\Models\Church::class);
     }
 }

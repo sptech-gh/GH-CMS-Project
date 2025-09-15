@@ -14,6 +14,13 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // 🔑 Add church_id (each user belongs to a church)
+            $table->foreignId('church_id')
+                  ->nullable() // allow null in case user hasn’t been assigned yet
+                  ->constrained() // references id on churches table
+                  ->cascadeOnDelete();
+
             $table->rememberToken();
             $table->timestamps();
         });
